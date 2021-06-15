@@ -24,10 +24,10 @@ public class ArbolGeneral {
         
         if(path.isEmpty()) return false;
         
-        NodoGeneral padre = buscarNodoRECURSIVO(path);
+        NodoGeneral padre = buscarNodo(path);
         if(padre==null) return false;
         
-        NodoGeneral hijoYaExiste = buscarNodoRECURSIVO(path+"/"+dato);
+        NodoGeneral hijoYaExiste = buscarNodo(path+"/"+dato);
         if(hijoYaExiste!=null) return false;
         
         NodoGeneral nuevo = new NodoGeneral(dato);
@@ -52,34 +52,39 @@ public class ArbolGeneral {
 //        return null;
 //    }
     
-    private NodoGeneral buscarNodoRECURSIVO(String path){
-        String pathTemporal = path;
+    private NodoGeneral buscarNodo(String path){
+        
         path = path.substring(1);
-        int q = path.length();
-        int w = pathTemporal.length();
-        w = w/2;
         
-        if(pathTemporal.charAt(1) == raiz.dato){
-            //EVALUACIONES
-            if(w == 1) return raiz;
+        String[] v = path.split("/");
+        
+        
+        if(v[0].charAt(0)==raiz.dato){
+            if (v.length == 1) return raiz;
             NodoGeneral padre = raiz;
-            
-            if(q == 0){
-                padre = padre.obtenerHijo(path.charAt(0));
-                buscarNodoRECURSIVO(path.substring(1));
-                if(padre == null) return null;
-            }            
-            
-            return padre;
-        }
-        
+            //BUSCAR NODO RECURSIVO:
+            return buscarNodo(padre, v);
+        }                
         return null;
+    }
+    
+    public NodoGeneral buscarNodo(NodoGeneral p, String[] v){
+        int i=1;
+        //ADAPTAMOS EL CODIGO NORMAL DE BUSCARNODO SIN RECURSIVIDAD VISTO EN
+        //MEET, A UN CODIGO RECURSIVO QUE SE LLAME A SI MISMO
+        if(i<v.length){
+            p = p.obtenerHijo(v[i].charAt(0));
+            if(p==null) return null;
+            i++;
+            p = buscarNodo(p, v);
+        }
+        return p;
     }
     
     public boolean eliminar(String path){
         if(raiz==null) return false;
         
-        NodoGeneral hijo = buscarNodoRECURSIVO(path);
+        NodoGeneral hijo = buscarNodo(path);
         if(hijo == null) return false;
         
         //si es una rama no se puede eliminar.
@@ -91,7 +96,7 @@ public class ArbolGeneral {
         }
         
         String pathPadre = obtenerPathPadre(path);
-        NodoGeneral padre = buscarNodoRECURSIVO(path);
+        NodoGeneral padre = buscarNodo(path);
         
         return padre.desenlazar(hijo);
     }
