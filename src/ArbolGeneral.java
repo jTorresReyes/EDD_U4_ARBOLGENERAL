@@ -27,8 +27,8 @@ public class ArbolGeneral {
         NodoGeneral padre = buscarNodoRECURSIVO(path);
         if(padre==null) return false;
         
-//        NodoGeneral hijoYaExiste = buscarNodoRECURSIVO(path+"/"+dato);
-//        if(hijoYaExiste!=null) return false;
+        NodoGeneral hijoYaExiste = buscarNodoRECURSIVO(path+"/"+dato);
+        if(hijoYaExiste!=null) return false;
         
         NodoGeneral nuevo = new NodoGeneral(dato);
         return padre.enlazar(nuevo);
@@ -53,11 +53,10 @@ public class ArbolGeneral {
 //    }
     
     private NodoGeneral buscarNodoRECURSIVO(String path){
-        int q, w;
         String pathTemporal = path;
         path = path.substring(1);
-        q = path.length();
-        w = pathTemporal.length();
+        int q = path.length();
+        int w = pathTemporal.length();
         w = w/2;
         
         if(pathTemporal.charAt(1) == raiz.dato){
